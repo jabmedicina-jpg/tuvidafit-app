@@ -6,7 +6,7 @@ personalizados, cálculo de calorías, seguimiento de progreso).
 Stack: Next.js (App Router) + TypeScript + Tailwind + Supabase, desplegada
 en Vercel como PWA — mismo enfoque que Hemogestor.
 
-## Etapa actual: Etapa 6 (Mi Progreso)
+## Etapa actual: Etapa 7 (lista de compras) — MVP completo según el plan original
 
 Lo que ya funciona:
 - Bienvenida (`/`)
@@ -15,11 +15,14 @@ Lo que ya funciona:
 - Perfil completo (`/perfil`)
 - Biblioteca de recetas (`/recetas`) — 28 recetas en 5 cocinas
 - Generador de menú semanal (`/menu`), con "Cambiar receta"
-- Mi Progreso (`/progreso`): Datos (peso/medidas + gráfico de evolución),
-  Fotos (privadas, por ángulo, en un bucket de Storage separado) y Logros
+- Mi Progreso (`/progreso`): Datos, Fotos y Logros
+- Lista de compras automática (`/compras`): agrupada por categoría a partir
+  del menú semanal, con checkboxes y botón para regenerarla si cambiás el menú
 
-Lo que falta:
-- Lista de compras automática a partir del menú → Etapa 7
+Ideas para después (no estaban en el plan original de 7 etapas):
+- Pulir el diseño de las pantallas que todavía son muy básicas (`/menu`, `/recetas`, `/compras`)
+- Sumar más recetas
+- Pasar de PWA a apps nativas empaquetando con Capacitor, si hace falta subir a las stores
 
 ## Setup
 
