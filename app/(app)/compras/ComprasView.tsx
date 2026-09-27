@@ -3,8 +3,15 @@
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { CATEGORY_ORDER, CATEGORY_LABEL, type Category } from "@/lib/shopping-list";
+import {
+  CATEGORY_ORDER,
+  CATEGORY_LABEL,
+  CATEGORY_COLOR,
+  CATEGORY_ICON,
+  type Category,
+} from "@/lib/shopping-list";
 import { regenerateList } from "./actions";
+import { ACCENT } from "../colorClasses";
 
 type Item = {
   id: string;
@@ -56,6 +63,9 @@ export default function ComprasView({
   }
 
   const totalChecked = localItems.filter((i) => i.checked).length;
+  const pct = localItems.length
+    ? Math.round((totalChecked / localItems.length) * 100)
+    : 0;
 
   return (
     <main className="bg-white px-6 pt-7 pb-10">
@@ -67,36 +77,61 @@ export default function ComprasView({
           type="button"
           disabled={pending}
           onClick={handleRegenerate}
-          className="text-xs font-semibold text-blue disabled:opacity-50 shrink-0 mt-1.5"
+          className="text-xs font-semibold text-purple disabled:opacity-50 shrink-0 mt-1.5"
         >
           {pending ? "Actualizando…" : "Actualizar desde el menú"}
         </button>
       </div>
-      <p className="text-sm text-muted mb-6">
-        {totalChecked}/{localItems.length} marcados · a partir de tu menú de
-        esta semana
+      <p className="text-sm text-muted mb-3">
+        a partir de tu menú de esta semana
       </p>
+
+      <div className="rounded-2xl p-4 bg-purple/5 mb-6 flex items-center gap-3 shadow-sm">
+        <div className="flex-1">
+          <div className="h-2 rounded-full bg-purple/15 overflow-hidden">
+            <div
+              className="h-full bg-purple rounded-full transition-all"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+        </div>
+        <span className="text-xs font-semibold text-purple shrink-0">
+          {totalChecked}/{localItems.length}
+        </span>
+      </div>
 
       <div className="flex flex-col gap-6">
         {CATEGORY_ORDER.map((cat) => {
           const catItems = grouped.get(cat) ?? [];
           if (catItems.length === 0) return null;
+          const color = ACCENT[CATEGORY_COLOR[cat]];
           return (
             <div key={cat}>
-              <h2 className="text-xs font-bold uppercase tracking-wide text-teal mb-2">
-                {CATEGORY_LABEL[cat]}
-              </h2>
+              <div className="flex items-center gap-2 mb-2">
+                <span
+                  className={`w-7 h-7 rounded-full ${color.bgBadge} flex items-center justify-center text-sm shrink-0`}
+                >
+                  {CATEGORY_ICON[cat]}
+                </span>
+                <h2
+                  className={`text-xs font-bold uppercase tracking-wide ${color.text}`}
+                >
+                  {CATEGORY_LABEL[cat]}
+                </h2>
+              </div>
               <div className="flex flex-col gap-1.5">
                 {catItems.map((it) => (
                   <label
                     key={it.id}
-                    className="flex items-start gap-3 border border-line rounded-xl px-3.5 py-2.5"
+                    className={`flex items-start gap-3 rounded-xl px-3.5 py-2.5 ${
+                      it.checked ? "bg-[#F5F5F5]" : color.bgSofter
+                    }`}
                   >
                     <input
                       type="checkbox"
                       checked={it.checked}
                       onChange={() => toggle(it)}
-                      className="mt-0.5 accent-blue"
+                      className={`mt-0.5 ${color.accent}`}
                     />
                     <span
                       className={`text-sm flex-1 ${

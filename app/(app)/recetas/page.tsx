@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { ACCENT, type AccentColor } from "../colorClasses";
 
 const ORIGIN_LABEL: Record<string, string> = {
   argentina: "Argentina",
@@ -9,7 +10,7 @@ const ORIGIN_LABEL: Record<string, string> = {
   italia: "Italia",
 };
 
-const ORIGIN_COLOR: Record<string, string> = {
+const ORIGIN_COLOR: Record<string, AccentColor> = {
   argentina: "blue",
   brasil: "green",
   mexico: "orange",
@@ -55,27 +56,26 @@ export default async function RecetasPage({
       </p>
 
       <div className="flex gap-2 mb-7 flex-wrap">
-        {[
-          { value: undefined, label: "Todas", color: "ink" },
-          ...ORIGIN_VALUES.map((v) => ({
-            value: v,
-            label: ORIGIN_LABEL[v],
-            color: ORIGIN_COLOR[v],
-          })),
-        ].map((opt) => {
-          const active = origen === opt.value || (!origen && !opt.value);
-          const href = opt.value ? `/recetas?origen=${opt.value}` : "/recetas";
+        <a
+          href="/recetas"
+          className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+            !origen ? "bg-ink text-white" : "bg-ink/5 text-ink"
+          }`}
+        >
+          Todas
+        </a>
+        {ORIGIN_VALUES.map((v) => {
+          const color = ACCENT[ORIGIN_COLOR[v]];
+          const active = origen === v;
           return (
             <a
-              key={opt.label}
-              href={href}
+              key={v}
+              href={`/recetas?origen=${v}`}
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                active
-                  ? `bg-${opt.color} text-white`
-                  : `bg-${opt.color}/10 text-${opt.color}`
+                active ? `${color.bg} text-white` : `${color.bgSoft} ${color.text}`
               }`}
             >
-              {opt.label}
+              {ORIGIN_LABEL[v]}
             </a>
           );
         })}
@@ -83,19 +83,19 @@ export default async function RecetasPage({
 
       <div className="flex flex-col gap-3">
         {(recipes ?? []).map((r) => {
-          const color = ORIGIN_COLOR[r.origin] ?? "ink";
+          const color = ACCENT[ORIGIN_COLOR[r.origin] ?? "teal"];
           return (
             <a
               key={r.id}
               href={`/recetas/${r.id}`}
-              className={`rounded-2xl p-4 flex flex-col gap-2 shadow-sm bg-${color}/5`}
+              className={`rounded-2xl p-4 flex flex-col gap-2 shadow-sm ${color.bgSofter}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <h2 className="font-semibold text-ink text-[15px] leading-snug">
                   {r.name}
                 </h2>
                 <span
-                  className={`text-[11px] font-semibold whitespace-nowrap shrink-0 px-2 py-0.5 rounded-full bg-${color}/15 text-${color}`}
+                  className={`text-[11px] font-semibold whitespace-nowrap shrink-0 px-2 py-0.5 rounded-full ${color.bgBadge} ${color.text}`}
                 >
                   {ORIGIN_LABEL[r.origin] ?? r.origin}
                 </span>

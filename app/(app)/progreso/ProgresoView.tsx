@@ -4,6 +4,7 @@ import { useState } from "react";
 import DatosTab from "./DatosTab";
 import FotosTab from "./FotosTab";
 import LogrosTab from "./LogrosTab";
+import { ACCENT, type AccentColor } from "../colorClasses";
 
 export type ProgressLog = {
   id: string;
@@ -24,6 +25,12 @@ export type ProgressPhoto = {
 };
 
 type Tab = "datos" | "fotos" | "logros";
+
+const TAB_COLOR: Record<Tab, AccentColor> = {
+  datos: "blue",
+  fotos: "purple",
+  logros: "green",
+};
 
 export default function ProgresoView({
   userId,
@@ -52,20 +59,22 @@ export default function ProgresoView({
         hábitos.
       </p>
 
-      <div className="flex gap-2 mb-6 border-b border-line">
-        {TABS.map((t) => (
-          <button
-            key={t.value}
-            onClick={() => setTab(t.value)}
-            className={`px-3 py-2.5 text-sm font-semibold border-b-2 -mb-px ${
-              tab === t.value
-                ? "border-blue text-blue"
-                : "border-transparent text-muted"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+      <div className="flex gap-1.5 mb-6 bg-[#F1F4F4] rounded-2xl p-1.5">
+        {TABS.map((t) => {
+          const active = tab === t.value;
+          const color = ACCENT[TAB_COLOR[t.value]];
+          return (
+            <button
+              key={t.value}
+              onClick={() => setTab(t.value)}
+              className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                active ? `${color.bg} text-white shadow-sm` : "text-muted"
+              }`}
+            >
+              {t.label}
+            </button>
+          );
+        })}
       </div>
 
       {tab === "datos" && <DatosTab userId={userId} logs={logs} />}

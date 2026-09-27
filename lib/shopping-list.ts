@@ -27,6 +27,26 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   condimentos: "Condimentos",
 };
 
+// Nombre de color (matchea con el mapa ACCENT de app/(app)/colorClasses.ts)
+// e ícono para cada categoría, usados solo en la UI.
+export const CATEGORY_COLOR: Record<Category, "coral" | "green" | "orange" | "blue" | "teal" | "purple"> = {
+  carnes_y_proteinas: "coral",
+  verduras: "green",
+  frutas: "orange",
+  lacteos: "blue",
+  almacen: "teal",
+  condimentos: "purple",
+};
+
+export const CATEGORY_ICON: Record<Category, string> = {
+  carnes_y_proteinas: "🥩",
+  verduras: "🥦",
+  frutas: "🍎",
+  lacteos: "🥛",
+  almacen: "🛒",
+  condimentos: "🧂",
+};
+
 // Unifica variantes de un mismo ingrediente bajo un solo nombre de compra.
 const ALIAS: Record<string, string> = {
   "pechuga de pollo grillada": "pechuga de pollo",

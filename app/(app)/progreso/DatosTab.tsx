@@ -20,6 +20,17 @@ function formatDate(d: string) {
   });
 }
 
+const MEDIDAS = [
+  { key: "waist_cm" as const, label: "Cintura", unit: "cm", dot: "bg-blue" },
+  { key: "hip_cm" as const, label: "Cadera", unit: "cm", dot: "bg-purple" },
+  {
+    key: "body_fat_pct" as const,
+    label: "% Grasa corporal",
+    unit: "%",
+    dot: "bg-orange",
+  },
+];
+
 export default function DatosTab({
   userId,
   logs,
@@ -55,6 +66,17 @@ export default function DatosTab({
     latestWeight?.weight_kg != null && firstWeight?.weight_kg != null
       ? Math.round((latestWeight.weight_kg - firstWeight.weight_kg) * 10) / 10
       : null;
+
+  const latestLog = [...logs].reverse()[0];
+  const firstLog = logs[0];
+
+  function medidaDelta(key: (typeof MEDIDAS)[number]["key"]) {
+    const latest = latestLog?.[key];
+    const first = firstLog?.[key];
+    if (latest == null || first == null) return null;
+    const d = Math.round((latest - first) * 10) / 10;
+    return d;
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -93,18 +115,16 @@ export default function DatosTab({
   return (
     <div className="flex flex-col gap-6">
       {latestWeight?.weight_kg != null && (
-        <div className="border border-line rounded-2xl p-4 flex flex-col gap-1">
-          <span className="text-xs text-muted">Peso actual</span>
+        <div className="rounded-2xl p-5 bg-green text-white flex flex-col gap-1 shadow-sm">
+          <span className="text-xs font-bold uppercase tracking-wide opacity-90">
+            Peso actual
+          </span>
           <div className="flex items-baseline gap-2">
-            <span className="font-display text-3xl font-semibold text-ink">
+            <span className="font-display text-3xl font-semibold">
               {latestWeight.weight_kg} kg
             </span>
             {delta !== null && delta !== 0 && (
-              <span
-                className={`text-sm font-semibold ${
-                  delta < 0 ? "text-green" : "text-orange"
-                }`}
-              >
+              <span className="text-sm font-semibold bg-white/20 rounded-full px-2 py-0.5">
                 {delta > 0 ? "+" : ""}
                 {delta} kg desde el inicio
               </span>
@@ -114,8 +134,10 @@ export default function DatosTab({
       )}
 
       {chartData.length > 1 && (
-        <div className="border border-line rounded-2xl p-4">
-          <span className="text-xs text-muted">Evolución del peso</span>
+        <div className="rounded-2xl p-4 shadow-sm bg-blue/5">
+          <span className="text-xs font-bold uppercase tracking-wide text-blue">
+            Evolución del peso
+          </span>
           <div className="h-40 mt-2">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
@@ -129,13 +151,49 @@ export default function DatosTab({
                 <Line
                   type="monotone"
                   dataKey="peso"
-                  stroke="#3D8361"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
+                  stroke="#3B6FF0"
+                  strokeWidth={2.5}
+                  dot={{ r: 3, fill: "#3B6FF0" }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
+        </div>
+      )}
+
+      {firstLog && MEDIDAS.some((m) => latestLog?.[m.key] != null) && (
+        <div className="rounded-2xl p-4 shadow-sm bg-purple/5 flex flex-col gap-3">
+          <span className="text-xs font-bold uppercase tracking-wide text-purple">
+            Medidas corporales
+          </span>
+          {MEDIDAS.map((m) => {
+            const value = latestLog?.[m.key];
+            if (value == null) return null;
+            const d = medidaDelta(m.key);
+            return (
+              <div key={m.key} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2.5 h-2.5 rounded-full ${m.dot}`} />
+                  <span className="text-sm text-ink">{m.label}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-ink">
+                    {value} {m.unit}
+                  </span>
+                  {d !== null && d !== 0 && (
+                    <span
+                      className={`text-xs font-semibold ${
+                        d < 0 ? "text-green" : "text-orange"
+                      }`}
+                    >
+                      {d > 0 ? "+" : ""}
+                      {d} {m.unit}
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

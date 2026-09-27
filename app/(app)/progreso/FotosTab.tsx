@@ -93,12 +93,15 @@ export default function FotosTab({
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-xs text-muted bg-[#F1F4F4] rounded-xl px-4 py-3">
-        Tus fotos son privadas y solo vos las ves. No se analizan ni se
-        juzgan — son solo un registro visual.
+      <p className="text-xs text-purple bg-purple/10 rounded-xl px-4 py-3 flex items-start gap-2">
+        <span>🔒</span>
+        <span>
+          Tus fotos son privadas y solo vos las ves. No se analizan ni se
+          juzgan — son solo un registro visual.
+        </span>
       </p>
 
-      <div className="border border-line rounded-2xl p-4 flex flex-col gap-3">
+      <div className="rounded-2xl p-4 flex flex-col gap-3 shadow-sm bg-purple/5">
         <span className="text-sm font-semibold text-ink">
           Agregar una foto
         </span>
@@ -108,27 +111,28 @@ export default function FotosTab({
               key={a.value}
               type="button"
               onClick={() => setAngle(a.value)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border ${
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
                 angle === a.value
-                  ? "bg-ink text-white border-ink"
-                  : "border-line text-ink"
+                  ? "bg-purple text-white"
+                  : "bg-white text-purple border border-purple/30"
               }`}
             >
               {a.label}
             </button>
           ))}
         </div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          disabled={uploading}
-          className="text-sm"
-        />
-        {uploading && (
-          <span className="text-xs text-muted">Subiendo…</span>
-        )}
+        <label className="rounded-xl border-2 border-dashed border-purple/30 bg-white px-4 py-3 text-sm text-muted flex items-center justify-center gap-2 cursor-pointer">
+          <span>📷</span>
+          <span>{uploading ? "Subiendo…" : "Elegir foto"}</span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={uploading}
+            className="hidden"
+          />
+        </label>
         {error && <p className="text-xs text-red-600">{error}</p>}
       </div>
 
@@ -137,7 +141,7 @@ export default function FotosTab({
           <button
             key={a.value}
             onClick={() => setFilter(a.value)}
-            className={`px-3 py-2 rounded-xl text-xs font-semibold ${
+            className={`px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
               filter === a.value
                 ? "bg-ink text-white"
                 : "bg-[#F1F4F4] text-muted"
@@ -150,7 +154,8 @@ export default function FotosTab({
 
       {filtered.length === 0 ? (
         <p className="text-sm text-muted">
-          Todavía no subiste fotos de {ANGLES.find((a) => a.value === filter)?.label.toLowerCase()}.
+          Todavía no subiste fotos de{" "}
+          {ANGLES.find((a) => a.value === filter)?.label.toLowerCase()}.
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-3">
@@ -174,7 +179,7 @@ export default function FotosTab({
                   type="button"
                   disabled={deletingId === p.id}
                   onClick={() => handleDelete(p)}
-                  className="text-xs text-red-600 font-semibold disabled:opacity-50"
+                  className="text-xs text-red-600 disabled:opacity-50"
                 >
                   {deletingId === p.id ? "…" : "Eliminar"}
                 </button>

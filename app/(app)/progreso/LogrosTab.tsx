@@ -1,6 +1,7 @@
 "use client";
 
 import type { ProgressLog, ProgressPhoto } from "./ProgresoView";
+import { ACCENT, type AccentColor } from "../colorClasses";
 
 function formatDate(d: string) {
   return new Date(d + "T00:00:00").toLocaleDateString("es-AR", {
@@ -30,28 +31,44 @@ export default function LogrosTab({
       )
     : 0;
 
-  const cards = [
+  const cards: { label: string; value: string; icon: string; color: AccentColor }[] = [
     {
       label: "Registros cargados",
       value: `${logs.length}`,
+      icon: "📊",
+      color: "blue",
     },
     {
       label: "Fotos de progreso",
       value: `${photos.length}`,
+      icon: "📷",
+      color: "purple",
     },
-    first
-      ? {
-          label: "Constancia",
-          value: `${weeksTracking} ${weeksTracking === 1 ? "semana" : "semanas"} registrando`,
-        }
-      : null,
-    first && last && first.id !== last.id
-      ? {
-          label: "Desde el primer registro",
-          value: `${formatDate(first.logged_at)} → ${formatDate(last.logged_at)}`,
-        }
-      : null,
-  ].filter((c): c is { label: string; value: string } => c !== null);
+    ...(first
+      ? [
+          {
+            label: "Constancia",
+            value: `${weeksTracking} ${
+              weeksTracking === 1 ? "semana" : "semanas"
+            } registrando`,
+            icon: "🔥",
+            color: "orange" as AccentColor,
+          },
+        ]
+      : []),
+    ...(first && last && first.id !== last.id
+      ? [
+          {
+            label: "Desde el primer registro",
+            value: `${formatDate(first.logged_at)} → ${formatDate(
+              last.logged_at
+            )}`,
+            icon: "🏆",
+            color: "green" as AccentColor,
+          },
+        ]
+      : []),
+  ];
 
   if (cards.length === 0) {
     return (
@@ -68,15 +85,27 @@ export default function LogrosTab({
         El progreso no depende solo del peso: también cuentan la constancia y
         los hábitos.
       </p>
-      {cards.map((c) => (
-        <div
-          key={c.label}
-          className="border border-line rounded-2xl p-4 flex items-center justify-between"
-        >
-          <span className="text-sm text-muted">{c.label}</span>
-          <span className="text-sm font-semibold text-ink">{c.value}</span>
-        </div>
-      ))}
+      {cards.map((c) => {
+        const color = ACCENT[c.color];
+        return (
+          <div
+            key={c.label}
+            className={`rounded-2xl p-4 flex items-center gap-3 shadow-sm ${color.bgSofter}`}
+          >
+            <span
+              className={`w-10 h-10 rounded-full ${color.bgBadge} flex items-center justify-center text-lg shrink-0`}
+            >
+              {c.icon}
+            </span>
+            <div className="flex flex-col">
+              <span className="text-xs text-muted">{c.label}</span>
+              <span className="text-sm font-semibold text-ink">
+                {c.value}
+              </span>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
