@@ -1,0 +1,10 @@
+{
+  "name": "TuVidaFit",
+  "short_name": "TuVidaFit",
+  "description": "Tu comida. Tu objetivo. Tu ritmo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#12A9B3",
+  "icons": []
+}
