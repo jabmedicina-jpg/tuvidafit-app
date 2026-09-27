@@ -10,7 +10,6 @@ const config: Config = {
         orange: "#F7A72E",
         blue: "#3B6FF0",
         purple: "#8E6FF0",
-        coral: "#F0564E",
         ink: "#1B2A2E",
         muted: "#66767A",
         line: "#E4E9EA",
