@@ -4,7 +4,12 @@ import { createClient } from "@/lib/supabase/server";
 const ORIGIN_LABEL: Record<string, string> = {
   argentina: "Argentina",
   brasil: "Brasil",
+  mexico: "México",
+  mediterranea: "Mediterránea",
+  italia: "Italia",
 };
+
+const ORIGIN_VALUES = Object.keys(ORIGIN_LABEL);
 
 export default async function RecetasPage({
   searchParams,
@@ -26,7 +31,7 @@ export default async function RecetasPage({
     )
     .order("name");
 
-  if (origen === "argentina" || origen === "brasil") {
+  if (origen && ORIGIN_VALUES.includes(origen)) {
     query = query.eq("origin", origen);
   }
 
@@ -38,14 +43,13 @@ export default async function RecetasPage({
         Recetas
       </h1>
       <p className="text-sm text-muted mb-5">
-        Recetas fit argentinas y brasileñas.
+        Recetas fit de distintas cocinas.
       </p>
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-6 flex-wrap">
         {[
           { value: undefined, label: "Todas" },
-          { value: "argentina", label: "Argentina" },
-          { value: "brasil", label: "Brasil" },
+          ...ORIGIN_VALUES.map((v) => ({ value: v, label: ORIGIN_LABEL[v] })),
         ].map((opt) => {
           const active = origen === opt.value || (!origen && !opt.value);
           const href = opt.value ? `/recetas?origen=${opt.value}` : "/recetas";
