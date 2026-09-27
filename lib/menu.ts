@@ -123,6 +123,7 @@ export function generateWeeklyMenu(
 
   for (let day = 0; day < 7; day++) {
     const plan: DayPlan = {};
+    const usedToday = new Set<string>();
 
     for (const mealType of MEAL_TYPES) {
       const target = dailyCalories * MEAL_CALORIE_SHARE[mealType];
@@ -131,12 +132,13 @@ export function generateWeeklyMenu(
         mealType,
         restrictions,
         cuisinePref
-      );
+      ).filter((r) => !usedToday.has(r.id));
       const chosen = pickOne(candidates, target, usedByMeal[mealType]);
 
       if (chosen) {
         plan[mealType] = chosen.id;
         usedByMeal[mealType].add(chosen.id);
+        usedToday.add(chosen.id);
       }
     }
 
@@ -146,21 +148,24 @@ export function generateWeeklyMenu(
   return days;
 }
 
-// Para "Cambiar receta": misma lógica de filtro, excluyendo la actual.
+// Para "Cambiar receta": misma lógica de filtro, excluyendo la actual
+// y cualquier otra receta ya usada ese mismo día.
 export function pickAlternative(
   recipes: RecipeForMenu[],
   mealType: MealType,
   restrictions: string[],
   cuisinePref: CuisinePref,
   currentRecipeId: string,
-  targetCalories: number
+  targetCalories: number,
+  excludeIds: string[] = []
 ): RecipeForMenu | null {
+  const excluded = new Set([currentRecipeId, ...excludeIds]);
   const candidates = candidatesFor(
     recipes,
     mealType,
     restrictions,
     cuisinePref
-  ).filter((r) => r.id !== currentRecipeId);
+  ).filter((r) => !excluded.has(r.id));
 
   return pickOne(candidates, targetCalories, new Set());
 }

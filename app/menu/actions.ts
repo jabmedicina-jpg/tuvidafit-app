@@ -23,6 +23,24 @@ export async function changeRecipe(
     .eq("id", user.id)
     .single();
 
+  const { data: menuItem } = await supabase
+    .from("menu_items")
+    .select("weekly_menu_id, day_of_week")
+    .eq("id", menuItemId)
+    .single();
+
+  let excludeIds: string[] = [];
+  if (menuItem) {
+    const { data: siblings } = await supabase
+      .from("menu_items")
+      .select("recipe_id")
+      .eq("weekly_menu_id", menuItem.weekly_menu_id)
+      .eq("day_of_week", menuItem.day_of_week)
+      .neq("id", menuItemId);
+
+    excludeIds = (siblings ?? []).map((s) => s.recipe_id);
+  }
+
   const { data: recipes } = await supabase
     .from("recipes")
     .select(
@@ -37,7 +55,8 @@ export async function changeRecipe(
     profile?.diet_restrictions ?? [],
     (profile?.cuisine_pref as any) ?? "ambas",
     currentRecipeId,
-    targetCalories
+    targetCalories,
+    excludeIds
   );
 
   if (!alternative) {
