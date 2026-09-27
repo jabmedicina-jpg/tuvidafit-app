@@ -71,8 +71,9 @@ export default async function RecetasPage({
 
       <div className="flex flex-col gap-3">
         {(recipes ?? []).map((r) => (
-          <div
+          <a
             key={r.id}
+            href={`/recetas/${r.id}`}
             className="border border-line rounded-2xl p-4 flex flex-col gap-2"
           >
             <div className="flex items-start justify-between gap-3">
@@ -116,7 +117,7 @@ export default async function RecetasPage({
                 )}
               </div>
             )}
-          </div>
+          </a>
         ))}
 
         {recipes && recipes.length === 0 && (

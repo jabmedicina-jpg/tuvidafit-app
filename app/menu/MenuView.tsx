@@ -136,6 +136,13 @@ export default function MenuView({
                     {recipe.prep_minutes && <span>{recipe.prep_minutes} min</span>}
                   </div>
 
+                  <a
+                    href={`/recetas/${recipe.id}`}
+                    className="text-xs font-semibold text-teal"
+                  >
+                    Ver preparación →
+                  </a>
+
                   {meal && errorId === meal.menuItemId && (
                     <p className="text-xs text-red-600">
                       No encontramos otra receta compatible para esta comida.
