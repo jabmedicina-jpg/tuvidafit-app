@@ -11,7 +11,7 @@ type ActivityLevel =
   | "activo"
   | "muy_activo";
 type Goal = "bajar_grasa" | "mantener" | "ganar_masa";
-type CuisinePref = "argentina" | "brasil" | "ambas";
+type CuisinePref = "argentina" | "brasil" | "ambas" | "todas";
 type Sex = "femenino" | "masculino" | "otro";
 
 type Profile = {
@@ -288,6 +288,7 @@ export default function PerfilForm({
             { value: "argentina", label: "Argentina" },
             { value: "brasil", label: "Brasil" },
             { value: "ambas", label: "Argentina + Brasil" },
+            { value: "todas", label: "Todas las cocinas" },
           ].map((opt) => (
             <label
               key={opt.value}

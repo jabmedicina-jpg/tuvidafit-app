@@ -6,20 +6,21 @@ personalizados, cálculo de calorías, seguimiento de progreso).
 Stack: Next.js (App Router) + TypeScript + Tailwind + Supabase, desplegada
 en Vercel como PWA — mismo enfoque que Hemogestor.
 
-## Etapa actual: Etapa 2 (registro, login y perfil)
+## Etapa actual: Etapa 5 (generador de menú semanal)
 
 Lo que ya funciona:
 - Bienvenida (`/`)
 - Registro / inicio de sesión con Supabase Auth (`/login`)
-- Dashboard protegido (`/dashboard`) — redirige a `/login` si no hay sesión
+- Dashboard protegido (`/dashboard`) con kcal y macros calculados
+- Perfil completo (`/perfil`), incluida la preferencia "todas las cocinas"
+- Biblioteca de recetas (`/recetas`) — 28 recetas: argentina, brasil, méxico, mediterránea, italia
+- Generador de menú semanal (`/menu`): arma automáticamente desayuno/almuerzo/merienda/cena
+  para los 7 días según el objetivo calórico y las restricciones del perfil, con botón
+  "Cambiar receta" por comida
 
 Lo que falta (próximas etapas, según el plan original):
-- Formulario de perfil (edad, altura, peso, objetivo, restricciones) → Etapa 2
-- Motor de cálculo nutricional (kcal y macros estimados) → Etapa 3
-- Carga de recetas reales en `recipes` → Etapa 4
-- Generador de menú semanal → Etapa 5
 - Mi Progreso (gráficos + fotos) → Etapa 6
-- Lista de compras automática → Etapa 7
+- Lista de compras automática a partir del menú → Etapa 7
 
 ## Setup
 
