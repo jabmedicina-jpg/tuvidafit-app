@@ -16,9 +16,21 @@ export default async function AppLayout({
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("avatar_path")
+      .select("avatar_path, last_seen_at")
       .eq("id", user.id)
       .single();
+
+    // Registro de actividad: actualiza last_seen_at como máximo una vez por día
+    const unDia = 24 * 60 * 60 * 1000;
+    const ultima = profile?.last_seen_at
+      ? new Date(profile.last_seen_at).getTime()
+      : 0;
+    if (profile && Date.now() - ultima > unDia) {
+      await supabase
+        .from("profiles")
+        .update({ last_seen_at: new Date().toISOString() })
+        .eq("id", user.id);
+    }
 
     if (profile?.avatar_path) {
       const { data } = supabase.storage
