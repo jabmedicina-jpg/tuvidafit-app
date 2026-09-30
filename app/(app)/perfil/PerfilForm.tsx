@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -38,12 +38,19 @@ const RESTRICCIONES = [
 export default function PerfilForm({
   userId,
   initialProfile,
+  initialAvatarUrl,
 }: {
   userId: string;
   initialProfile: Profile;
+  initialAvatarUrl: string | null;
 }) {
   const router = useRouter();
   const supabase = createClient();
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
 
   const [fullName, setFullName] = useState(initialProfile?.full_name ?? "");
   const [age, setAge] = useState(initialProfile?.age?.toString() ?? "");
@@ -114,6 +121,41 @@ export default function PerfilForm({
     router.refresh();
   }
 
+  async function handleAvatarChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAvatarError(null);
+    setUploadingAvatar(true);
+
+    const path = `${userId}/avatar`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true, contentType: file.type });
+
+    if (uploadError) {
+      setUploadingAvatar(false);
+      setAvatarError(uploadError.message);
+      return;
+    }
+
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .upsert({ id: userId, avatar_path: path });
+
+    setUploadingAvatar(false);
+
+    if (updateError) {
+      setAvatarError(updateError.message);
+      return;
+    }
+
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    setAvatarUrl(`${data.publicUrl}?t=${Date.now()}`);
+    router.refresh();
+  }
+
   return (
     <main className="bg-white px-6 pt-8 pb-16">
       <h1 className="font-display font-semibold text-2xl text-ink mb-1">
@@ -122,6 +164,51 @@ export default function PerfilForm({
       <p className="text-sm text-muted mb-6">
         Con estos datos armamos tu objetivo calórico y tu menú semanal.
       </p>
+
+      <div className="flex flex-col items-center gap-2 mb-7">
+        <div className="relative w-24 h-24">
+          <div className="w-24 h-24 rounded-full overflow-hidden bg-teal/10 flex items-center justify-center">
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt="Tu foto de perfil"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#12A9B3" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"></path>
+              </svg>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => avatarInputRef.current?.click()}
+            disabled={uploadingAvatar}
+            aria-label="Cambiar foto de perfil"
+            className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-teal text-white flex items-center justify-center shadow-sm disabled:opacity-60"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 7h3l2-2h6l2 2h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z"></path>
+              <circle cx="12" cy="13" r="3.5"></circle>
+            </svg>
+          </button>
+          <input
+            ref={avatarInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+            className="hidden"
+          />
+        </div>
+        {uploadingAvatar && (
+          <span className="text-xs text-muted">Subiendo…</span>
+        )}
+        {avatarError && (
+          <span className="text-xs text-red-600">{avatarError}</span>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <label className="flex flex-col gap-1.5 text-sm font-semibold text-ink">

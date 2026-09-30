@@ -16,5 +16,19 @@ export default async function PerfilPage() {
     .eq("id", user.id)
     .single();
 
-  return <PerfilForm userId={user.id} initialProfile={profile} />;
+  let avatarUrl: string | null = null;
+  if (profile?.avatar_path) {
+    const { data } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(profile.avatar_path);
+    avatarUrl = data.publicUrl;
+  }
+
+  return (
+    <PerfilForm
+      userId={user.id}
+      initialProfile={profile}
+      initialAvatarUrl={avatarUrl}
+    />
+  );
 }

@@ -1,11 +1,33 @@
 import Link from "next/link";
 import BottomNav from "./BottomNav";
+import { createClient } from "@/lib/supabase/server";
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let avatarUrl: string | null = null;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("avatar_path")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.avatar_path) {
+      const { data } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(profile.avatar_path);
+      avatarUrl = data.publicUrl;
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <header className="flex items-center justify-between px-6 py-3 border-b border-line shrink-0">
@@ -24,12 +46,21 @@ export default function AppLayout({
         <Link
           href="/perfil"
           aria-label="Mi Perfil"
-          className="w-8 h-8 rounded-full bg-[#E3F8FA] flex items-center justify-center shrink-0"
+          className="w-8 h-8 rounded-full bg-[#E3F8FA] flex items-center justify-center shrink-0 overflow-hidden"
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#12A9B3" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="8" r="4"></circle>
-            <path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"></path>
-          </svg>
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={avatarUrl}
+              alt="Tu foto de perfil"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#12A9B3" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"></path>
+            </svg>
+          )}
         </Link>
       </header>
 
