@@ -29,6 +29,13 @@ type Day = {
 
 const MEAL_ORDER: MealType[] = ["desayuno", "almuerzo", "merienda", "cena"];
 
+const MEAL_COLOR: Record<MealType, string> = {
+  desayuno: "orange",
+  almuerzo: "teal",
+  merienda: "purple",
+  cena: "blue",
+};
+
 function todayIndex() {
   const jsDay = new Date().getDay(); // 0 = domingo
   return jsDay === 0 ? 6 : jsDay - 1; // 0 = lunes ... 6 = domingo
@@ -93,15 +100,15 @@ export default function MenuView({
         Semana del {new Date(weekStart + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit" })}
       </p>
 
-      <div className="flex gap-1.5 mb-6 overflow-x-auto pb-1">
+      <div className="flex gap-1.5 mb-7 overflow-x-auto pb-1">
         {DAY_LABEL.map((label, i) => (
           <button
             key={label}
             onClick={() => setSelected(i)}
-            className={`shrink-0 px-3 py-2 rounded-xl text-xs font-semibold ${
+            className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold transition-colors ${
               selected === i
-                ? "bg-ink text-white"
-                : "bg-[#F1F4F4] text-muted"
+                ? "bg-teal text-white"
+                : "bg-teal/10 text-teal"
             }`}
           >
             {label.slice(0, 3)}
@@ -113,19 +120,22 @@ export default function MenuView({
         {MEAL_ORDER.map((mealType) => {
           const meal = mealsByType.get(mealType);
           const recipe = meal?.recipe;
+          const color = MEAL_COLOR[mealType];
 
           return (
             <div
               key={mealType}
-              className="border border-line rounded-2xl p-4 flex flex-col gap-2"
+              className={`rounded-2xl p-4 flex flex-col gap-2 shadow-sm bg-${color}/5`}
             >
-              <span className="text-xs font-bold uppercase tracking-wide text-teal">
+              <span
+                className={`self-start text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-${color}/15 text-${color}`}
+              >
                 {MEAL_LABEL[mealType]}
               </span>
 
               {recipe ? (
                 <>
-                  <h2 className="font-semibold text-ink text-[15px]">
+                  <h2 className="font-semibold text-ink text-[15px] mt-1">
                     {recipe.name}
                   </h2>
                   <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted">
@@ -138,7 +148,7 @@ export default function MenuView({
 
                   <a
                     href={`/recetas/${recipe.id}`}
-                    className="text-xs font-semibold text-teal"
+                    className={`text-xs font-semibold text-${color}`}
                   >
                     Ver preparación →
                   </a>
@@ -153,7 +163,7 @@ export default function MenuView({
                     type="button"
                     disabled={pending}
                     onClick={() => meal && handleChange(meal)}
-                    className="mt-1 self-start text-xs font-semibold text-blue disabled:opacity-50"
+                    className="mt-1 self-start text-xs font-semibold text-ink bg-white px-3 py-1.5 rounded-full shadow-sm disabled:opacity-50"
                   >
                     {pending ? "Cambiando…" : "Cambiar receta"}
                   </button>

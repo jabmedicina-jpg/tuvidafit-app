@@ -71,7 +71,7 @@ export default function LogrosTab({
       {cards.map((c) => (
         <div
           key={c.label}
-          className="border border-line rounded-2xl p-4 flex items-center justify-between"
+          className="bg-blue/5 rounded-2xl p-4 flex items-center justify-between shadow-sm"
         >
           <span className="text-sm text-muted">{c.label}</span>
           <span className="text-sm font-semibold text-ink">{c.value}</span>

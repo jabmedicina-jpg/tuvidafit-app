@@ -93,7 +93,7 @@ export default function DatosTab({
   return (
     <div className="flex flex-col gap-6">
       {latestWeight?.weight_kg != null && (
-        <div className="border border-line rounded-2xl p-4 flex flex-col gap-1">
+        <div className="bg-green/5 rounded-2xl p-4 flex flex-col gap-1 shadow-sm">
           <span className="text-xs text-muted">Peso actual</span>
           <div className="flex items-baseline gap-2">
             <span className="font-display text-3xl font-semibold text-ink">
@@ -114,7 +114,7 @@ export default function DatosTab({
       )}
 
       {chartData.length > 1 && (
-        <div className="border border-line rounded-2xl p-4">
+        <div className="bg-blue/5 rounded-2xl p-4 shadow-sm">
           <span className="text-xs text-muted">Evolución del peso</span>
           <div className="h-40 mt-2">
             <ResponsiveContainer width="100%" height="100%">
@@ -129,7 +129,7 @@ export default function DatosTab({
                 <Line
                   type="monotone"
                   dataKey="peso"
-                  stroke="#3D8361"
+                  stroke="#2ECC71"
                   strokeWidth={2}
                   dot={{ r: 3 }}
                 />
@@ -141,7 +141,7 @@ export default function DatosTab({
 
       <form
         onSubmit={handleSubmit}
-        className="border border-line rounded-2xl p-4 flex flex-col gap-3"
+        className="bg-[#F7F9FA] rounded-2xl p-4 flex flex-col gap-3 shadow-sm"
       >
         <span className="text-sm font-semibold text-ink">
           Registrar nuevo dato
@@ -153,7 +153,7 @@ export default function DatosTab({
             type="date"
             value={loggedAt}
             onChange={(e) => setLoggedAt(e.target.value)}
-            className="border border-line rounded-xl px-3 py-2 text-sm font-normal"
+            className="border border-line rounded-xl px-3 py-2 text-sm font-normal bg-white"
           />
         </label>
 
@@ -165,7 +165,7 @@ export default function DatosTab({
               step="0.1"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
-              className="border border-line rounded-xl px-3 py-2 text-sm font-normal"
+              className="border border-line rounded-xl px-3 py-2 text-sm font-normal bg-white"
             />
           </label>
           <label className="flex flex-col gap-1 text-xs font-semibold text-ink">
@@ -175,7 +175,7 @@ export default function DatosTab({
               step="0.1"
               value={bodyFat}
               onChange={(e) => setBodyFat(e.target.value)}
-              className="border border-line rounded-xl px-3 py-2 text-sm font-normal"
+              className="border border-line rounded-xl px-3 py-2 text-sm font-normal bg-white"
             />
           </label>
           <label className="flex flex-col gap-1 text-xs font-semibold text-ink">
@@ -185,7 +185,7 @@ export default function DatosTab({
               step="0.1"
               value={waist}
               onChange={(e) => setWaist(e.target.value)}
-              className="border border-line rounded-xl px-3 py-2 text-sm font-normal"
+              className="border border-line rounded-xl px-3 py-2 text-sm font-normal bg-white"
             />
           </label>
           <label className="flex flex-col gap-1 text-xs font-semibold text-ink">
@@ -195,7 +195,7 @@ export default function DatosTab({
               step="0.1"
               value={hip}
               onChange={(e) => setHip(e.target.value)}
-              className="border border-line rounded-xl px-3 py-2 text-sm font-normal"
+              className="border border-line rounded-xl px-3 py-2 text-sm font-normal bg-white"
             />
           </label>
         </div>
@@ -206,7 +206,7 @@ export default function DatosTab({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="border border-line rounded-xl px-3 py-2 text-sm font-normal resize-none"
+            className="border border-line rounded-xl px-3 py-2 text-sm font-normal bg-white resize-none"
           />
         </label>
 
@@ -215,7 +215,7 @@ export default function DatosTab({
         <button
           type="submit"
           disabled={saving}
-          className="rounded-2xl bg-blue text-white font-bold py-3 text-sm disabled:opacity-60"
+          className="rounded-2xl bg-green text-white font-bold py-3 text-sm disabled:opacity-60"
         >
           {saving ? "Guardando…" : "Registrar nuevo dato"}
         </button>
@@ -227,7 +227,7 @@ export default function DatosTab({
           {[...logs].reverse().map((l) => (
             <div
               key={l.id}
-              className="border border-line rounded-xl px-4 py-3 flex flex-col gap-0.5"
+              className="bg-[#F7F9FA] rounded-xl px-4 py-3 flex flex-col gap-0.5"
             >
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-ink">

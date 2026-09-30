@@ -93,12 +93,12 @@ export default function FotosTab({
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-xs text-muted bg-[#F1F4F4] rounded-xl px-4 py-3">
+      <p className="text-xs text-muted bg-purple/5 rounded-xl px-4 py-3">
         Tus fotos son privadas y solo vos las ves. No se analizan ni se
         juzgan — son solo un registro visual.
       </p>
 
-      <div className="border border-line rounded-2xl p-4 flex flex-col gap-3">
+      <div className="bg-purple/5 rounded-2xl p-4 flex flex-col gap-3 shadow-sm">
         <span className="text-sm font-semibold text-ink">
           Agregar una foto
         </span>
@@ -110,8 +110,8 @@ export default function FotosTab({
               onClick={() => setAngle(a.value)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold border ${
                 angle === a.value
-                  ? "bg-ink text-white border-ink"
-                  : "border-line text-ink"
+                  ? "bg-purple text-white border-purple"
+                  : "border-purple/30 text-ink"
               }`}
             >
               {a.label}
@@ -139,8 +139,8 @@ export default function FotosTab({
             onClick={() => setFilter(a.value)}
             className={`px-3 py-2 rounded-xl text-xs font-semibold ${
               filter === a.value
-                ? "bg-ink text-white"
-                : "bg-[#F1F4F4] text-muted"
+                ? "bg-purple text-white"
+                : "bg-purple/10 text-purple"
             }`}
           >
             {a.label}

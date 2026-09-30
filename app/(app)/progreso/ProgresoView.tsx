@@ -52,15 +52,15 @@ export default function ProgresoView({
         hábitos.
       </p>
 
-      <div className="flex gap-2 mb-6 border-b border-line">
+      <div className="flex gap-2 mb-7">
         {TABS.map((t) => (
           <button
             key={t.value}
             onClick={() => setTab(t.value)}
-            className={`px-3 py-2.5 text-sm font-semibold border-b-2 -mb-px ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
               tab === t.value
-                ? "border-blue text-blue"
-                : "border-transparent text-muted"
+                ? "bg-blue text-white"
+                : "bg-blue/10 text-blue"
             }`}
           >
             {t.label}

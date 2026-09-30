@@ -14,6 +14,15 @@ type Item = {
   checked: boolean;
 };
 
+const CATEGORY_COLOR: Record<Category, string> = {
+  carnes_y_proteinas: "orange",
+  verduras: "green",
+  frutas: "purple",
+  lacteos: "blue",
+  almacen: "teal",
+  condimentos: "ink",
+};
+
 export default function ComprasView({
   weeklyMenuId,
   items,
@@ -81,22 +90,25 @@ export default function ComprasView({
         {CATEGORY_ORDER.map((cat) => {
           const catItems = grouped.get(cat) ?? [];
           if (catItems.length === 0) return null;
+          const color = CATEGORY_COLOR[cat];
           return (
             <div key={cat}>
-              <h2 className="text-xs font-bold uppercase tracking-wide text-teal mb-2">
+              <h2
+                className={`inline-block text-xs font-bold uppercase tracking-wide mb-2 px-2.5 py-1 rounded-full bg-${color}/15 text-${color}`}
+              >
                 {CATEGORY_LABEL[cat]}
               </h2>
               <div className="flex flex-col gap-1.5">
                 {catItems.map((it) => (
                   <label
                     key={it.id}
-                    className="flex items-start gap-3 border border-line rounded-xl px-3.5 py-2.5"
+                    className={`flex items-start gap-3 rounded-xl px-3.5 py-2.5 bg-${color}/5`}
                   >
                     <input
                       type="checkbox"
                       checked={it.checked}
                       onChange={() => toggle(it)}
-                      className="mt-0.5 accent-blue"
+                      className={`mt-0.5 accent-${color}`}
                     />
                     <span
                       className={`text-sm flex-1 ${

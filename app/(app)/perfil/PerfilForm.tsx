@@ -215,7 +215,7 @@ export default function PerfilForm({
           ].map((opt) => (
             <label
               key={opt.value}
-              className="flex items-center gap-3 border border-line rounded-xl px-4 py-3 text-[15px] text-ink"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] text-ink bg-[#F7F9FA] has-[:checked]:bg-teal/10"
             >
               <input
                 type="radio"
@@ -237,7 +237,7 @@ export default function PerfilForm({
           {RESTRICCIONES.map((opt) => (
             <label
               key={opt.value}
-              className="flex items-center gap-3 border border-line rounded-xl px-4 py-3 text-[15px] text-ink"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] text-ink bg-[#F7F9FA] has-[:checked]:bg-teal/10"
             >
               <input
                 type="checkbox"
@@ -292,7 +292,7 @@ export default function PerfilForm({
           ].map((opt) => (
             <label
               key={opt.value}
-              className="flex items-center gap-3 border border-line rounded-xl px-4 py-3 text-[15px] text-ink"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] text-ink bg-[#F7F9FA] has-[:checked]:bg-teal/10"
             >
               <input
                 type="radio"
